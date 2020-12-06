@@ -3,7 +3,7 @@ import { section }        from "../lib/blocks/section";
 import { text }           from "../lib/blocks/text";
 import { noop, get }      from "../lib/utils";
 import { expect }         from "chai"
-import { dump }           from "./support/helpers";
+import { dump, expectThrow }           from "./support/helpers";
 import {
   resetCatalog,
   getCatalog,
@@ -68,5 +68,24 @@ describe('Core', () => {
       expect(nodes[0].nodes[0].name).to.equal('welcome')
       expect(nodes[0].nodes[0].data).to.equal('Lorem ipsum')
     });
+
+    describe('Partial rendering', () => {
+
+      it('can render pages individually', async () => {
+        const tree = await render({ page: 'Home' });
+
+        expect(tree.root.nodes.length).to.equal(1)
+        expect(tree.root.nodes[0].type).to.equal('page')
+        expect(tree.root.nodes[0].name).to.equal('Home')
+      })
+
+      it('throws an error if the page is not found', async () => {
+        const error = await expectThrow(() => render({ page: 'i.dont.exist' }))
+
+        expect(error.status).to.equal(404)
+        expect(error.type).to.equal('NOT_FOUND')
+        expect(error.message).to.equal("Page 'i.dont.exist' does not exist")
+      })
+    })
   });
 })

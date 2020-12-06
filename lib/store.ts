@@ -3,7 +3,6 @@ import { PageCatalog, PaNode, PaSession, Maybe } from "./types";
 import { get, set } from "./utils";
 
 const STORE_KEY = '__palapa_store__';
-
 export interface PalapaStore {
   session:        Maybe<PaSession>,
   pageCatalog:    PageCatalog,

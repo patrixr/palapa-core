@@ -1,5 +1,6 @@
 import { palapaStore }        from "./store";
-import { noop, panic, pipe }  from "./utils";
+import { noop, pipe }         from "./utils";
+import { throw404, throw500 } from "./error"
 import Logger                 from './logger'
 import {
   Partial,
@@ -26,11 +27,11 @@ export function invokeSession<T>(...args: OptionalArgLeft<PaNode, SessionInvoker
   const invoker   = args.length === 1 ? args[0] : args[1];
   const type      = args.length === 1 ? 'block' : args[0]?.type;
 
-  if (!store.session) {
-    panic(`${type || 'block'} called outside of render session`);
+  if (store.session === null) {
+    throw500(`${type || 'block'} called outside of render session`);
   }
 
-  return invoker(store.session)
+  return invoker(store.session as PaSession)
 }
 
 /**
@@ -100,14 +101,14 @@ export function getAllPages() : PaNode[] {
  * @param {string} page
  * @returns {PaNode}
  */
-export function getPage(page : string) : PaNode {
-  const catalog = getCatalog();
+export function getPage(pageName : string) : PaNode {
+  const pageBuilder = getCatalog()[pageName];
 
-  if (!catalog) {
-    pipe(`Page ${page} does not exist`).to([logger.error, panic]);
+  if (!pageBuilder) {
+    pipe(`Page '${pageName}' does not exist`).to([logger.error, throw404]);
   }
 
-  return getCatalog()[page]();
+  return pageBuilder();
 }
 
 /**

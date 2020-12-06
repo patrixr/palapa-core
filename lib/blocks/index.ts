@@ -1,6 +1,6 @@
-import { newNode, renderNode } from "../core";
-import { BlockGen, PaNode } from "../types";
-import { toGenerator } from "../utils";
+import { newNode, renderNode }  from "../core";
+import { BlockGen, PaNode }     from "../types";
+import { toGenerator }          from "../utils";
 
 // ----------------------
 // Types
