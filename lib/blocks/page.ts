@@ -1,5 +1,5 @@
 import { BlockGen } from "../types";
-import { registerPage, newNode } from "../core"
+import { registerPage } from "../core"
 
 export function page(name: string, generator: BlockGen) {
   registerPage(name, generator);

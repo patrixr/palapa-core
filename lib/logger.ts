@@ -1,5 +1,6 @@
 import { Dictionnary }  from "./types";
-import { panic }        from "./utils"
+
+type LogMethod = "info"|"error"|"debug"
 
 const emoji = (type: string) : string => {
   const mapping : Dictionnary<string> = {
@@ -15,7 +16,7 @@ const format = (name : string, msg : string, type: string) : string => {
   return `${emoji(type)}  [${name}] ${new Date().toLocaleTimeString()}: ${msg}`
 }
 
-const print = (method: "info"|"error"|"debug", msg: string) => {
+const print = (method: LogMethod, msg: string) => {
   if (!process.env.SILENT) {
     console[method](msg);
   }

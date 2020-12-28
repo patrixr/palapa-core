@@ -6,11 +6,18 @@ import { toGenerator }          from "../utils";
 // Types
 // ----------------------
 
-export interface BlockProperties {}
+export interface BlockProps {}
 
-export type BlockGenOrValue<T = void> = T extends void ? BlockGen<any> : (T|BlockGen<T>)
+export type BlockGenOrValue<OutVal = void> = OutVal extends void ? BlockGen<any> : (OutVal|BlockGen<OutVal>)
 
-export type BlockArgs<In extends BlockProperties = BlockProperties, Out = any> = ([In, BlockGenOrValue<Out>]|[BlockGenOrValue<Out>])
+export type BlockArgs<
+  Props extends BlockProps = BlockProps,
+  OutVal = any
+> = (
+  [Props, BlockGenOrValue<OutVal>]|[BlockGenOrValue<OutVal>]
+)
+
+export type Block<Props = {}> = (name : string, ...args: BlockArgs<Props, any>) => any
 
 // ----------------------
 // Helpers
@@ -20,7 +27,18 @@ interface BlockCreateOptions {
   lazy?:  boolean
 }
 
-export function createBlock<In, Out = void>(type: string, opts: BlockCreateOptions = {}) {
+
+/**
+ * Creates a Block function
+ *
+ * @export
+ * @template In
+ * @template Out
+ * @param {string} type
+ * @param {BlockCreateOptions} [opts={}]
+ * @returns {Block<In>}
+ */
+export function factory<In = {}, Out = void>(type: string, opts: BlockCreateOptions = {}) : Block<In> {
   const { lazy = false } = opts;
 
   return async (name : string, ...args: BlockArgs<In, Out>) : Promise<PaNode<In, Out>> => {
