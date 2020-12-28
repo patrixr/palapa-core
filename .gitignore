@@ -2,6 +2,8 @@
 
 # custom
 /docs
+/lib/**/*.js
+/specs/**/*.js
 
 # dependencies
 /node_modules
